@@ -15,6 +15,17 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		body := buf.String()
 		log.Printf("Body: %s", body)
 	}
+	// Print headers
+	for name, headers := range r.Header {
+		for _, h := range headers {
+			log.Printf("Header: %v: %v", name, h)
+		}
+	}
+	// Print query parameters
+	query := r.URL.Query()
+	for key, value := range query {
+		log.Printf("Query: %v: %v", key, value)
+	}
 
 	w.WriteHeader(http.StatusOK)
 }
@@ -22,7 +33,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.HandleFunc("/", handler)
 
-	log.Println("Starting server on :8888")
+	log.Println("API Responder Service started on port :8888")
 	if err := http.ListenAndServe(":8888", nil); err != nil {
 		log.Fatalf("Server failed: %s", err)
 	}
